@@ -1,7 +1,6 @@
-import React from "react";
+import React,{useState} from "react";
 import DarkButton from './DarkButton';
 import Footer from "./Footer";
-import './dropdown.css';
 
 const NavBar = (props) => {
       const [isOpen, setIsOpen] = useState(false);

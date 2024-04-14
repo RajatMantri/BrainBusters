@@ -4,14 +4,8 @@ import App from "./App";
 import NavBar from './NavBar';
 import HomePage from './HomePage';
 import StudentHome from './StudentHome';
-import './index.css';
+import './signUp.css';
 
-ReactDOM.render(<>
- <StudentHome 
-    type='student'
-    username='prakhar123'
-    recentQuizzes={[1,2,3,4]}
-  />
-  </>,
+ReactDOM.render(App(),
   document.getElementById('root')
 );

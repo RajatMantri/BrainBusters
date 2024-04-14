@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -18,14 +19,35 @@ const SignUpForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can implement your logic for form submission
-    console.log(formData);
+
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords don't match!");
+      return;
+    }
+
+    try {
+      // Update the URL to match the server's route
+      const response = await axios.post('http://localhost:4000/submitForm', formData);
+      console.log(response.data);
+      // Clear form data after successful submission
+      setFormData({
+        username: '',
+        password: '',
+        confirmPassword: '',
+        phoneNumber: '',
+        email: '',
+        userType: 'student' // Reset to default
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
-    <div className = "container">
+    <div className="container">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -42,7 +64,7 @@ const SignUpForm = () => {
         </div>
         <div>
           <label>Phone Number:</label>
-          <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
+          <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} pattern="[0-9]*" minLength="10" maxLength="10" required />
         </div>
         <div>
           <label>Email:</label>

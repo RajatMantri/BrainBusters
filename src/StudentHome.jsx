@@ -1,8 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
-import './navBar.css';
 import Footer from "./Footer";
-import './studentHome.css';
 
 const StudentHome = (props)=>{
     // Mock data for recent quizzes (replace this with actual data)
