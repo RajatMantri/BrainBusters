@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -8,26 +9,32 @@ const LoginForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value
-    });
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can implement your logic for login
-    console.log('Username:', formData.username);
-    console.log('Password:', formData.password);
-    // For demonstration, let's just clear the form after submission
-    setFormData({
-      username: '',
-      password: ''
-    });
+    try {
+      const response = await axios.post('http://localhost:4000/submitLogin', formData);
+      // console.log('Response:', response.data); // Log the entire response for debugging
+      // console.log('formData: ',formData.username+' formData: ',formData.password);
+      if (response.data && response.data.username===formData.username&&response.data.password===formData.password) {
+        console.log('Login successful!');
+
+      }
+      else{
+        alert('User does not exist');
+      }
+    } catch (error) {
+      console.error('Errors:', error.message); // Log network errors or other exceptions
+    }
   };
 
   return (
-    <div className = "container">
+    <div className="container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>

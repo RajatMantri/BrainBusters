@@ -30,7 +30,7 @@ const SignUpForm = () => {
 
     try {
       // Update the URL to match the server's route
-      const response = await axios.post('http://localhost:4000/submitForm', formData);
+      const response = await axios.post('http://localhost:4000/submitSignUp', formData);
       console.log(response.data);
       // Clear form data after successful submission
       setFormData({

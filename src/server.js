@@ -25,9 +25,8 @@ app.use(bodyParser.json());
 app.use(cors()); // Use CORS middleware to allow cross-origin requests
 
 // Handle form submission
-app.post('/submitForm', async (req, res) => {
+app.post('/submitSignUp', async (req, res) => {
   try {
-    console.log("info passed: " + req.body.username);
     const formData = req.body;
     const newFormData = new FormDataModel(formData);
     await newFormData.save();
@@ -35,6 +34,18 @@ app.post('/submitForm', async (req, res) => {
   } catch (error) {
     console.error('Error saving data:', error);
     res.status(500).send('Error saving data');
+  }
+});
+
+app.post('/submitLogin', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const user = await FormDataModel.findOne({username,password});
+    //console.log("user username: "+user.username);
+    res.json(user);
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).send('Internal server error');
   }
 });
 
