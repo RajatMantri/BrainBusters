@@ -1,3 +1,4 @@
+import './signUp.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -31,7 +32,8 @@ const SignUpForm = () => {
     try {
       // Update the URL to match the server's route
       const response = await axios.post('http://localhost:4000/submitSignUp', formData);
-      console.log(response.data);
+      console.log(response);
+      
       // Clear form data after successful submission
       setFormData({
         username: '',

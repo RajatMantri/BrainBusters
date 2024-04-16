@@ -22,8 +22,7 @@ const LoginForm = () => {
       // console.log('Response:', response.data); // Log the entire response for debugging
       // console.log('formData: ',formData.username+' formData: ',formData.password);
       if (response.data && response.data.username===formData.username&&response.data.password===formData.password) {
-        console.log('Login successful!');
-
+        alert('Login successful!');
       }
       else{
         alert('User does not exist');

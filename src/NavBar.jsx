@@ -1,9 +1,14 @@
-import React,{useState} from "react";
+// NavBar.jsx
+import React, { useState } from "react";
 import DarkButton from './DarkButton';
-import Footer from "./Footer";
+import Login from './Login';
+import { Link } from "react-router-dom";
+ // Import useHistory from react-router-dom
+import './navBar.css';
 
 const NavBar = (props) => {
-      const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [showSignIn, setShowSignIn] = useState(false);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -19,11 +24,10 @@ const NavBar = (props) => {
                 </ul>
                 <div className="auth-buttons">
                     <DarkButton />
-
-                     {props.type === 'home' && (
+                    {props.type === 'home' && (
                         <>
-                            <button>Sign Up</button>
-                            <button>Sign In</button>
+                        <Link to='/signup'><button>Sign-Up</button></Link>
+                            <Link to="/login"><button>Login</button></Link>
                         </>
                     )}
 
@@ -40,6 +44,7 @@ const NavBar = (props) => {
                     )}
                 </div>
             </nav>
+           
         </>
     );
 };

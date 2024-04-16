@@ -1,8 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Import CORS middleware
-
+const cors = require('cors');
 const PORT = 4000;
 const app = express();
 
@@ -41,13 +40,23 @@ app.post('/submitLogin', async (req, res) => {
   const { username, password } = req.body;
   try {
     const user = await FormDataModel.findOne({username,password});
-    //console.log("user username: "+user.username);
     res.json(user);
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).send('Internal server error');
   }
 });
+
+app.get('/', (req, res) => {
+  // Render your main HTML file
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/signin', (req, res) => {
+  // Render the sign-in HTML page
+  res.sendFile(path.join(__dirname, 'signin.html'));
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
