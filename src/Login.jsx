@@ -21,7 +21,7 @@ const LoginForm = () => {
       const response = await axios.post('http://localhost:4000/submitLogin', formData);
         
     alert('Login successful!');
-    window.location.href = '/studentHome';
+    window.location.href = `/studentHome/${formData.username}`;
 
     } catch (error) {
       console.error('Error submitting form:', error);
