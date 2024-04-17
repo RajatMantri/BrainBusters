@@ -27,6 +27,14 @@ app.use(cors()); // Use CORS middleware to allow cross-origin requests
 app.post('/submitSignUp', async (req, res) => {
   try {
     const formData = req.body;
+    
+    // Check if the username already exists
+    const existingUser = await FormDataModel.findOne({ username: formData.username });
+    if (existingUser) {
+      return res.status(400).send('Username already exists');
+    }
+    
+    // If the username is unique, save the new user data
     const newFormData = new FormDataModel(formData);
     await newFormData.save();
     res.status(200).send('Data saved successfully');
@@ -36,27 +44,18 @@ app.post('/submitSignUp', async (req, res) => {
   }
 });
 
+
 app.post('/submitLogin', async (req, res) => {
-  const { username, password } = req.body;
+  const loginData = req.body;
   try {
-    const user = await FormDataModel.findOne({username,password});
-    res.json(user);
+    const user = await FormDataModel.findOne(loginData);
+    if(user) res.status(200).send("Login Successfull");
+    else res.status(401).send("Unauthorized");
   } catch (error) {
     console.error('Error during login:', error);
     res.status(500).send('Internal server error');
   }
 });
-
-app.get('/', (req, res) => {
-  // Render your main HTML file
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.get('/signin', (req, res) => {
-  // Render the sign-in HTML page
-  res.sendFile(path.join(__dirname, 'signin.html'));
-});
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

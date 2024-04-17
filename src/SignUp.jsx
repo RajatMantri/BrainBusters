@@ -1,4 +1,3 @@
-import './signUp.css';
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -22,13 +21,13 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords don't match!");
       return;
     }
-
+  
     try {
       // Update the URL to match the server's route
       const response = await axios.post('http://localhost:4000/submitSignUp', formData);
@@ -43,10 +42,17 @@ const SignUpForm = () => {
         email: '',
         userType: 'student' // Reset to default
       });
+      alert('Sign up successful!');
     } catch (error) {
       console.error('Error submitting form:', error);
+      if (error.response && error.response.status === 400 && error.response.data === 'Username already exists') {
+        alert('Username already exists. Please choose a different one.');
+      } else {
+        alert('Error submitting form. Please try again later.');
+      }
     }
   };
+  
 
   return (
     <div className="container">

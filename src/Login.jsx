@@ -19,16 +19,16 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:4000/submitLogin', formData);
-      // console.log('Response:', response.data); // Log the entire response for debugging
-      // console.log('formData: ',formData.username+' formData: ',formData.password);
-      if (response.data && response.data.username===formData.username&&response.data.password===formData.password) {
-        alert('Login successful!');
-      }
-      else{
-        alert('User does not exist');
-      }
+        
+    alert('Login successful!');
+
     } catch (error) {
-      console.error('Errors:', error.message); // Log network errors or other exceptions
+      console.error('Error submitting form:', error);
+      if (error.response && error.response.status === 401 && error.response.data === 'Unauthorized') {
+        alert('User does not exist');
+      } else {
+        alert('Error submitting form. Please try again later.');
+      }
     }
   };
 

@@ -1,14 +1,9 @@
-// NavBar.jsx
 import React, { useState } from "react";
 import DarkButton from './DarkButton';
-import Login from './Login';
 import { Link } from "react-router-dom";
- // Import useHistory from react-router-dom
-import './navBar.css';
 
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [showSignIn, setShowSignIn] = useState(false);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -27,7 +22,7 @@ const NavBar = (props) => {
                     {props.type === 'home' && (
                         <>
                         <Link to='/signup'><button>Sign-Up</button></Link>
-                            <Link to="/login"><button>Login</button></Link>
+                        <Link to="/login"><button>Login</button></Link>
                         </>
                     )}
 

@@ -1,15 +1,11 @@
 import React from "react";
-import DarkButton from './DarkButton';
 import Footer from "./Footer";
 import NavBar from "./NavBar";
-import './navBar.css';
 
 const HomePage = (props) => {
     return (
         <>
-            <NavBar 
-                type={props.type}
-            />
+            <NavBar type={props.type} />
 
             <div className="jumbotron">
                 <h1>Welcome to our Quizzing Website</h1>
@@ -40,7 +36,7 @@ const HomePage = (props) => {
                 </div>
             </div>
 
-            <Footer />
+            <Footer/>
         </>
     );
 };
