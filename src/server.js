@@ -39,7 +39,6 @@ app.post('/submitSignUp', async (req, res) => {
     await newFormData.save();
     res.status(200).send('Data saved successfully');
   } catch (error) {
-    console.error('Error saving data:', error);
     res.status(500).send('Error saving data');
   }
 });

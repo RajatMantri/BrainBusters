@@ -43,8 +43,8 @@ const SignUpForm = () => {
         userType: 'student' // Reset to default
       });
       alert('Sign up successful!');
+      window.location.href = '/';
     } catch (error) {
-      console.error('Error submitting form:', error);
       if (error.response && error.response.status === 400 && error.response.data === 'Username already exists') {
         alert('Username already exists. Please choose a different one.');
       } else {
