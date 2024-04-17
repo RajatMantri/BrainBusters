@@ -28,6 +28,13 @@ const SignUpForm = () => {
       return;
     }
   
+    // Validate password format
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,13}$/;
+    if (!passwordRegex.test(formData.password)) {
+      alert("Password must be 8-13 characters long and contain at least one special character, one uppercase letter, one lowercase letter, and one number.");
+      return;
+    }
+  
     try {
       // Update the URL to match the server's route
       const response = await axios.post('http://localhost:4000/submitSignUp', formData);
@@ -82,7 +89,7 @@ const SignUpForm = () => {
           <label>User Type:</label>
           <select name="userType" value={formData.userType} onChange={handleChange}>
             <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
+            <option value="teacher">Admin</option>
           </select>
         </div>
         <button type="submit">Sign Up</button>

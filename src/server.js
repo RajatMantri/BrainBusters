@@ -48,7 +48,9 @@ app.post('/submitLogin', async (req, res) => {
   const loginData = req.body;
   try {
     const user = await FormDataModel.findOne(loginData);
-    if(user) res.status(200).send("Login Successfull");
+    if(user){
+      res.json(user);
+    }
     else res.status(401).send("Unauthorized");
   } catch (error) {
     console.error('Error during login:', error);

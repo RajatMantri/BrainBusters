@@ -21,8 +21,13 @@ const LoginForm = () => {
       const response = await axios.post('http://localhost:4000/submitLogin', formData);
         
     alert('Login successful!');
-    window.location.href = `/studentHome/${formData.username}`;
 
+    if (response.status === 200) {
+      const user = response.data;
+      const userType = user.userType;
+      if(userType==='student') window.location.href = `/studentHome/${formData.username}`;
+      else window.location.href = `/adminHome/${formData.username}`;
+    }
     } catch (error) {
       console.error('Error submitting form:', error);
       if (error.response && error.response.status === 401 && error.response.data === 'Unauthorized') {
