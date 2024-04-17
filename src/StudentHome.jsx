@@ -3,6 +3,7 @@ import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { useParams } from "react-router-dom";
 
+
 const StudentHome = (props)=>{
     // Mock data for recent quizzes (replace this with actual data)
     const recentQuizzes = [
@@ -18,6 +19,7 @@ const StudentHome = (props)=>{
         <>
             <NavBar 
                 type={props.type}
+                username={username}
             />
 
             <div className="jumbotron">

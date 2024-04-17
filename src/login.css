@@ -1,4 +1,4 @@
-.container {
+.LogInContainer {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
@@ -9,7 +9,7 @@
     margin-top: 11%;
 }
 
-h2 {
+.LogInContainer h2 {
     text-align: center;
     margin: auto;
     margin-bottom: 20px;
@@ -17,12 +17,12 @@ h2 {
     font-size: 40px;
 }
 
-form {
+.LogInContainer form {
     display: flex;
     flex-direction: column;
 }
 
-input {
+.LogInContainer input {
     margin-bottom: 15px;
     padding: 12px;
     /* Adjust the padding as needed */
@@ -33,13 +33,13 @@ input {
     /* Take up full width */
 }
 
-label {
+.LogInContainer label {
     font-size: 25px;
     font-style: italic;
     margin-bottom: 5px;
 }
 
-button {
+.LogInContainer button {
     padding: 10px 20px;
     background-color: #007bff;
     font-size: 25px;
@@ -53,11 +53,11 @@ button {
     /* Take up full width */
 }
 
-button:hover {
+.LogInContainer button:hover {
     background-color: #0056b3;
 }
 
-.error-message {
+.LogInContainer .error-message {
     color: red;
     margin-top: 5px;
 }
