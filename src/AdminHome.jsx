@@ -18,6 +18,7 @@ const AdminHome = (props)=>{
         <>
             <NavBar 
                 type={props.type}
+                username={username}
             />
 
             <div className="jumbotron">

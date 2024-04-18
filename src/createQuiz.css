@@ -1,0 +1,112 @@
+.quiz-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8;
+  }
+  
+  .quiz-title {
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .quiz-title.editing {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  .quiz-title:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .question-container {
+    margin-bottom: 20px;
+  }
+  
+  .question-input,
+  .select-type,
+  .option-input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .select-type {
+    width: 100%;
+  }
+  
+  .option-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .option-input {
+    margin-right: 10px;
+    width: calc(100% - 50px);
+  }
+  
+  .option-radio {
+    margin-right: 5px;
+  }
+  
+  .correct-answer-label {
+    font-size: 1rem;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+  }
+  
+  button {
+    margin: 5px; /* Updated margin */
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 20px; /* Adjusted padding */
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  button.delete-button {
+    background-color: #f44336;
+  }
+  
+  button.delete-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  .add-button {
+    background-color: #28b91d;
+  }
+  
+  .add-button:hover {
+    background-color: #30aa00;
+  }
+  
+  /* Responsive styles */
+  @media (min-width: 600px) {
+    .button-container {
+      flex-wrap: nowrap; /* Revert to single line layout */
+    }
+  }
+  

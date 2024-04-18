@@ -37,6 +37,18 @@ const NavBar = (props) => {
                             )}
                         </div>
                     )}
+
+                    {props.type === 'admin' && (
+                        <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown} onTouchStart={toggleDropdown}>
+                            <button className="dropbtn">{props.username}</button>
+                            {isOpen && (
+                                <div className="dropdown-content">
+                                    <a href="#">My Profile</a>
+                                    <a href="#">Log Out</a>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </nav>
            

@@ -5,8 +5,10 @@ import SignUp from './SignUp';
 import HomePage from './HomePage';
 import StudentHome from "./StudentHome"
 import AdminHome from './AdminHome';
+import CreateQuiz from './CreateQuiz';
 import './studentHome.css';
 import './dropdown.css';
+import './createQuiz.css';
 
 function App() {
   return (
@@ -16,7 +18,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/studentHome/:username" element={<StudentHome type='student' />} />
-        <Route path="/adminHome/:username" element={<AdminHome type='student' />} />
+        <Route path="/adminHome/:username" element={<AdminHome type='admin' />} />
+        <Route path="/adminHome/:username/createQuiz" element={<CreateQuiz/>} />
       </Routes>
     </div>
   );
