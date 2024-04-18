@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const SignUpForm = () => {
     email: '',
     userType: 'student' // Default to student
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,7 +53,7 @@ const SignUpForm = () => {
         userType: 'student' // Reset to default
       });
       alert('Sign up successful!');
-      window.location.href = '/';
+      navigate('/');
     } catch (error) {
       if (error.response && error.response.status === 400 && error.response.data === 'Username already exists') {
         alert('Username already exists. Please choose a different one.');

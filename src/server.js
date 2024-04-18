@@ -18,6 +18,13 @@ const formDataSchema = new mongoose.Schema({
   userType: String
 });
 
+const teamSchema = new mongoose.Schema({
+  name: String,
+  code: String
+});
+
+const Team = mongoose.model('Team', teamSchema);
+
 const FormDataModel = mongoose.model('FormData', formDataSchema);
 
 app.use(bodyParser.json());
@@ -57,6 +64,27 @@ app.post('/submitLogin', async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
+app.post('/createTeam', async (req, res) => {
+  try {
+    const name = req.body.teamName;
+    const code = generateRandomCode(6); // Function to generate a random code
+    const team = new Team({ name, code });
+    await team.save();
+    res.status(201).json({ message: 'Team created successfully', team });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create team', error });
+  }
+});
+
+function generateRandomCode(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+}
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,15 +22,18 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:4000/submitLogin', formData);
+      
+      if (response.status === 200) {
+        const user = response.data;
+        const userType = user.userType;
         
-    alert('Login successful!');
-
-    if (response.status === 200) {
-      const user = response.data;
-      const userType = user.userType;
-      if(userType==='student') window.location.href = `/studentHome/${formData.username}`;
-      else window.location.href = `/adminHome/${formData.username}`;
-    }
+        // Navigate based on user type using useNavigate
+        if (userType === 'student') {
+          navigate(`/studentHome/${formData.username}`);
+        } else {
+          navigate(`/adminHome/${formData.username}`);
+        }
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       if (error.response && error.response.status === 401 && error.response.data === 'Unauthorized') {

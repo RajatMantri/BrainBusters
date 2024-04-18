@@ -4,9 +4,14 @@ import { Link } from "react-router-dom";
 
 const NavBar = (props) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
+    };
+
+    const toggleCreateMenu = () => {
+        setIsCreateMenuOpen(!isCreateMenuOpen);
     };
     
     return (
@@ -33,6 +38,18 @@ const NavBar = (props) => {
                                 <div className="dropdown-content">
                                     <a href="#">My Profile</a>
                                     <a href="#">Log Out</a>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {props.type === 'admin' && (
+                        <div className="dropdown" onMouseEnter={toggleCreateMenu} onMouseLeave={toggleCreateMenu} onTouchStart={toggleCreateMenu}>
+                            <button className="dropbtn">+</button>
+                            {isCreateMenuOpen && (
+                                <div className="dropdown-content">
+                                    <Link to="/adminHome/:username/createQuiz" target="blank">Quiz</Link>
+                                    <Link to="/adminHome/:username/createTeam" target="blank">Team</Link>
                                 </div>
                             )}
                         </div>
