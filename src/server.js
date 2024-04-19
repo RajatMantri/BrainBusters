@@ -19,8 +19,10 @@ const formDataSchema = new mongoose.Schema({
 });
 
 const teamSchema = new mongoose.Schema({
-  name: String,
-  code: String
+  teamName: String,
+  Code: String,
+  Students: [{ type: String }], // Array of student usernames
+  Owner: String // Owner's username of the quiz
 });
 
 const Team = mongoose.model('Team', teamSchema);
@@ -67,9 +69,9 @@ app.post('/submitLogin', async (req, res) => {
 
 app.post('/createTeam', async (req, res) => {
   try {
-    const name = req.body.teamName;
+    const { teamName, ownerUsername } = req.body; // Destructure teamName and ownerUsername from req.body
     const code = generateRandomCode(6); // Function to generate a random code
-    const team = new Team({ name, code });
+    const team = new Team({ name: teamName, code, Students: [], owner: ownerUsername }); // Pass ownerUsername as owner
     await team.save();
     res.status(201).json({ message: 'Team created successfully', team });
   } catch (error) {
