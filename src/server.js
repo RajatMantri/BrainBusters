@@ -25,8 +25,19 @@ const teamSchema = new mongoose.Schema({
   Owner: String // Owner's username of the quiz
 });
 
-const Team = mongoose.model('Team', teamSchema);
+const quizSchema = new mongoose.Schema({
+  title: String,
+  questions: [{
+    id: Number,
+    title: String,
+    type: { type: String, enum: ['multipleChoice', 'trueFalse', 'paragraph'] },
+    options: { type: [String], default: [] },
+    correctAnswer: { type: mongoose.Schema.Types.Mixed, default: null }
+  }]
+});
 
+const Quiz = mongoose.model('Quiz', quizSchema);
+const Team = mongoose.model('Team', teamSchema);
 const FormDataModel = mongoose.model('FormData', formDataSchema);
 
 app.use(bodyParser.json());
@@ -86,6 +97,18 @@ function generateRandomCode(length) {
   }
   return code;
 }
+
+app.post('/submitQuiz', async (req, res) => {
+  try {
+    const { title, questions } = req.body;
+    const newQuiz = new Quiz({ title, questions });
+    await newQuiz.save();
+    res.status(201).json({ message: 'Quiz submitted successfully'});
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to submit quiz', error });
+  }
+
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

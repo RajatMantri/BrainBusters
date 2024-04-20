@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './createQuiz.css';
 
 const Quiz = () => {
   const [quizTitle, setQuizTitle] = useState("My Quiz");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-
   const [questions, setQuestions] = useState([
     {
       id: 1,
@@ -36,23 +36,34 @@ const Quiz = () => {
   const handleQuestionTypeChange = (index, e) => {
     const type = e.target.value;
     let updatedOptions = [];
+  
     if (type === 'multipleChoice') {
       updatedOptions = ["Option 1", "Option 2", "Option 3", "Option 4"];
-    } else if (type === 'trueFalse') {
-      updatedOptions = ["True", "False"];
     }
+  
     const updatedQuestions = [...questions];
     updatedQuestions[index].type = type;
-    updatedQuestions[index].options = updatedOptions;
-    updatedQuestions[index].correctAnswer = null;
+    updatedQuestions[index].options = type === 'multipleChoice' ? updatedOptions : [];
+    
+    // Set correctAnswer for True/False questions
+    if (type === 'trueFalse') {
+      updatedQuestions[index].correctAnswer = 0; // Default to 0 (true)
+    } else if (type === 'paragraph') {
+      updatedQuestions[index].correctAnswer = ''; // Clear correctAnswer for paragraph questions
+    }
+  
     setQuestions(updatedQuestions);
   };
 
-  const handleOptionChange = (questionIndex, optionIndex, e) => {
-    const updatedQuestions = [...questions];
+const handleOptionChange = (questionIndex, optionIndex, e) => {
+  const updatedQuestions = [...questions];
+  if (updatedQuestions[questionIndex].type === 'paragraph') {
+    updatedQuestions[questionIndex].correctAnswer = e.target.value;
+  } else {
     updatedQuestions[questionIndex].options[optionIndex] = e.target.value;
-    setQuestions(updatedQuestions);
-  };
+  }
+  setQuestions(updatedQuestions);
+};
 
   const handleCorrectAnswerChange = (questionIndex, index) => {
     const updatedQuestions = [...questions];
@@ -73,25 +84,29 @@ const Quiz = () => {
 
   const handleDeleteQuestion = (questionIndex) => {
     const updatedQuestions = questions.filter((_, index) => index !== questionIndex);
-    if (updatedQuestions.length === 1) {
-      // If only the default question remains, replace with the default question
-      const defaultQuestion = {
-        id: 1,
-        title: "Default Question",
-        type: "multipleChoice",
-        options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-        correctAnswer: null
-      };
-      setQuestions([defaultQuestion]);
-    } else {
-      setQuestions(updatedQuestions);
-    }
+    setQuestions(updatedQuestions.length === 0 ? [{ id: 1, title: "Default Question", type: "multipleChoice", options: ["Option 1", "Option 2", "Option 3", "Option 4"], correctAnswer: null }] : updatedQuestions);
   };
-  
+
+  const handleSubmitQuiz = () => {
+    const quizData = {
+      title: quizTitle,
+      questions: questions
+    };
+    
+    axios.post('http://localhost:4000/submitQuiz', quizData)
+      .then(response => {
+        // Handle successful submission
+        console.log('Quiz submitted successfully:');
+      })
+      .catch(error => {
+        // Handle error
+        console.error('Error:', error);
+      });
+  };
 
   return (
-  <div className="quiz-container">
-       <h2 className={`quiz-title ${isEditingTitle ? 'editing' : ''}`} onClick={handleTitleClick}>
+    <div className="quiz-container">
+      <h2 className={`quiz-title ${isEditingTitle ? 'editing' : ''}`} onClick={handleTitleClick}>
         {isEditingTitle ? (
           <input
             type="text"
@@ -124,44 +139,53 @@ const Quiz = () => {
           </select>
 
           {question.type === 'multipleChoice' && (
-            <div>
-              {question.options.map((option, optionIndex) => (
-                <div key={optionIndex} className="option-container">
-                  <input
-                    type="radio"
-                    name={`correctAnswer${index}`}
-                    checked={question.correctAnswer === optionIndex}
-                    onChange={() => handleCorrectAnswerChange(index, optionIndex)}
-                    className="option-radio"
-                  />
-                  <input
-                    type="text"
-                    value={option}
-                    onChange={(e) => handleOptionChange(index, optionIndex, e)}
-                    className="option-input"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+  <div>
+    {question.options.map((option, optionIndex) => (
+      <div key={optionIndex} className="option-container">
+        <input
+          type="radio"
+          name={`correctAnswer${index}`}
+          checked={question.correctAnswer === optionIndex}
+          onChange={() => handleCorrectAnswerChange(index, optionIndex)}
+          className="option-radio"
+        />
+        <input
+          type="text"
+          value={option}
+          onChange={(e) => handleOptionChange(index, optionIndex, e)}
+          className="option-input"
+        />
+      </div>
+    ))}
+  </div>
+)}
 
-          {question.type === 'trueFalse' && (
-            <div>
-              {question.options.map((option, optionIndex) => (
-                <div key={optionIndex} className="option-container">
-                  <input
-                    type="radio"
-                    name={`trueFalseOption${index}`}
-                    value={option}
-                    checked={question.correctAnswer === optionIndex}
-                    onChange={() => handleCorrectAnswerChange(index, optionIndex)}
-                    className="option-radio"
-                  />
-                  <label className="correct-answer-label">{option}</label>
-                </div>
-              ))}
-            </div>
-          )}
+{question.type === 'trueFalse' && (
+  <div>
+    <div className="option-container">
+      <input
+        type="radio"
+        name={`trueFalseOption${index}`}
+        value="True"
+        checked={question.correctAnswer === 0}
+        onChange={() => handleCorrectAnswerChange(index, 0)}
+        className="option-radio"
+      />
+      <label className="correct-answer-label">True</label>
+    </div>
+    <div className="option-container">
+      <input
+        type="radio"
+        name={`trueFalseOption${index}`}
+        value="False"
+        checked={question.correctAnswer === 1}
+        onChange={() => handleCorrectAnswerChange(index, 1)}
+        className="option-radio"
+      />
+      <label className="correct-answer-label">False</label>
+    </div>
+  </div>
+)}
 
           {question.type === 'paragraph' && (
             <div className="option-container">
@@ -182,6 +206,10 @@ const Quiz = () => {
       
       <div className="button-container">
         <button onClick={handleAddQuestion} className="add-button">Add Question</button>
+      </div>
+
+      <div className="button-container">
+        <button onClick={handleSubmitQuiz} className="submit-button">Submit Quiz</button>
       </div>
     </div>
   );
