@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
+import { useParams } from "react-router-dom";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import './createQuiz.css';
 
 const Quiz = () => {
   const [quizTitle, setQuizTitle] = useState("My Quiz");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const username = useParams();
   const [questions, setQuestions] = useState([
     {
       id: 1,
@@ -89,6 +92,7 @@ const handleOptionChange = (questionIndex, optionIndex, e) => {
 
   const handleSubmitQuiz = () => {
     const quizData = {
+      username: username,
       title: quizTitle,
       questions: questions
     };
@@ -209,7 +213,7 @@ const handleOptionChange = (questionIndex, optionIndex, e) => {
       </div>
 
       <div className="button-container">
-        <button onClick={handleSubmitQuiz} className="submit-button">Submit Quiz</button>
+       <Link to={`/adminHome/${username.username}`}><button onClick={handleSubmitQuiz} className="submit-button">Submit Quiz</button></Link>
       </div>
     </div>
   );

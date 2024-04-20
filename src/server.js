@@ -26,6 +26,7 @@ const teamSchema = new mongoose.Schema({
 });
 
 const quizSchema = new mongoose.Schema({
+  username: String,
   title: String,
   questions: [{
     id: Number,
@@ -100,14 +101,67 @@ function generateRandomCode(length) {
 
 app.post('/submitQuiz', async (req, res) => {
   try {
-    const { title, questions } = req.body;
-    const newQuiz = new Quiz({ title, questions });
+   const username = req.body.username.username;
+   const questions = req.body.questions;
+   const title = req.body.title;
+
+    // console.log(req.body);
+    const newQuiz = new Quiz({ username, title, questions });
     await newQuiz.save();
     res.status(201).json({ message: 'Quiz submitted successfully'});
   } catch (error) {
     res.status(500).json({ message: 'Failed to submit quiz', error });
   }
+});
 
+app.get('/quizzes/:username', async (req, res) => {
+  const { username } = req.params;
+  // console.log(username);
+  try {
+    // Find quizzes by username
+    const quizzes = await Quiz.find({ 'username': username });
+    // console.log(quizzes);
+    if (!quizzes) {
+      return res.status(404).json({ message: 'No quizzes found for the specified username' });
+    }
+
+    res.status(200).json(quizzes);
+  } catch (error) {
+    console.error('Error fetching quizzes:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// server.js
+
+app.delete('/quizzes/:quizId', async (req, res) => {
+  const { quizId } = req.params;
+  try {
+    const deletedQuiz = await Quiz.findByIdAndDelete(quizId);
+    if (!deletedQuiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+    res.status(200).json({ message: 'Quiz deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting quiz:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Define routes
+app.get('/quiz/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const quiz = await Quiz.findById(id);
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+    res.status(200).json(quiz);
+  } catch (error) {
+    console.error('Error fetching quiz:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
 app.listen(PORT, () => {

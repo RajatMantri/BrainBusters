@@ -7,6 +7,8 @@ import StudentHome from "./StudentHome"
 import AdminHome from './AdminHome';
 import CreateQuiz from './CreateQuiz';
 import CreateTeam from "./createTeam";
+import AdminQuizList from './AdminQuizList';
+import ViewQuiz from "./ViewQuiz";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/adminHome/:username" element={<AdminHome type='admin' />} />
         <Route path="/adminHome/createQuiz/:username" element={<CreateQuiz/>} />
         <Route path="/adminHome/createTeam/:username" element={<CreateTeam/>} />
+        <Route path="/adminHome/previousQuiz/:username" element={<AdminQuizList/>} />
+        <Route path="/quiz/:quizId" element={<ViewQuiz/>} />
         <Route path="*" element={<div>Error</div>}/>
       </Routes>
     </div>

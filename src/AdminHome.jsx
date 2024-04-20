@@ -12,7 +12,7 @@ const AdminHome = (props)=>{
     ];
 
     const { username } = useParams();
-    console.log(username);
+    // console.log(username);
 
     return (
         <>

@@ -75,3 +75,20 @@
   .dropdown:hover .dropbtn {
     background-color: #3e8e41;
   }
+
+  .link-button {
+    text-decoration: none;
+  }
+  
+  .link-button button {
+    /* Your button styles */
+    background-color: #007bff; /* Default color */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .link-button button:hover {
+    background-color: #0056b3; /* Change color on hover */
+  }
