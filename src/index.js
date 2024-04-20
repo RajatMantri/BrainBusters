@@ -7,6 +7,7 @@ import './homePage.css'
 import './studentHome.css';
 import './dropdown.css';
 import './createQuiz.css';
+import './createTeam.css'; 
 
 import {BrowserRouter} from "react-router-dom";
 

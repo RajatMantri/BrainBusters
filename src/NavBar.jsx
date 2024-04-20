@@ -48,8 +48,8 @@ const NavBar = (props) => {
                             <button className="dropbtn">+</button>
                             {isCreateMenuOpen && (
                                 <div className="dropdown-content">
-                                    <Link to="/adminHome/:username/createQuiz" target="blank">Quiz</Link>
-                                    <Link to="/adminHome/:username/createTeam" target="blank">Team</Link>
+                                    <Link to={`/adminHome/createQuiz/${props.username}`} target="_blank">Quiz</Link>
+                                    <Link to={`/adminHome/createTeam/${props.username}`} target="_blank">Team</Link>
                                 </div>
                             )}
                         </div>

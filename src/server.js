@@ -69,9 +69,8 @@ app.post('/submitLogin', async (req, res) => {
 
 app.post('/createTeam', async (req, res) => {
   try {
-    const { teamName, ownerUsername } = req.body; // Destructure teamName and ownerUsername from req.body
     const code = generateRandomCode(6); // Function to generate a random code
-    const team = new Team({teamName: teamName,Code:code, Students: [], Owner:ownerUsername }); // Pass ownerUsername as owner
+    const team = new Team({teamName: req.body.teamName,Code:code, Students: [], Owner:req.body.username }); // Pass ownerUsername as owner
     await team.save();
     res.status(201).json({ message: 'Team created successfully', team });
   } catch (error) {
