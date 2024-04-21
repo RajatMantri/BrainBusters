@@ -8,7 +8,8 @@ import AdminHome from './AdminHome';
 import CreateQuiz from './CreateQuiz';
 import CreateTeam from "./createTeam";
 import AdminQuizList from './AdminQuizList';
-import ViewQuiz from "./ViewQuiz";
+import ViewQuizAdmin from "./ViewQuizAdmin";
+import AdminTeamList from './AdminTeamList';
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         <Route path="/adminHome/createQuiz/:username" element={<CreateQuiz/>} />
         <Route path="/adminHome/createTeam/:username" element={<CreateTeam/>} />
         <Route path="/adminHome/previousQuiz/:username" element={<AdminQuizList/>} />
-        <Route path="/quiz/:quizId" element={<ViewQuiz/>} />
+        <Route path="/adminHome/previousTeam/:username" element={<AdminTeamList/>} />
+        <Route path="/quiz/:quizId" element={<ViewQuizAdmin/>} />
         <Route path="*" element={<div>Error</div>}/>
       </Routes>
     </div>

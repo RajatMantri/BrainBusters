@@ -164,6 +164,28 @@ app.get('/quiz/:id', async (req, res) => {
   }
 });
 
+app.get('/teams/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const teams = await Team.find({ Owner: username });
+    res.json(teams);
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.delete('/teams/:teamId', async (req, res) => {
+  const { teamId } = req.params;
+  try {
+    await Team.findByIdAndDelete(teamId);
+    res.json({ message: 'Team deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting team:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

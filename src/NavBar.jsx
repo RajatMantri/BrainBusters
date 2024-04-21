@@ -46,6 +46,10 @@ const NavBar = (props) => {
                     {props.type === 'admin' && (
                         <Link to={`/adminHome/previousQuiz/${props.username}`} className="link-button"><button>Previous Quiz</button></Link>
                     )}
+
+                    {props.type === 'admin' && (
+                        <Link to={`/adminHome/previousTeam/${props.username}`} className="link-button"><button>Previous Teams</button></Link>
+                    )}
                     
                     {props.type === 'admin' && (
                         <div className="dropdown" onMouseEnter={toggleCreateMenu} onMouseLeave={toggleCreateMenu} onTouchStart={toggleCreateMenu}>
