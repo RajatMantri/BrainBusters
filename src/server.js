@@ -22,7 +22,8 @@ const teamSchema = new mongoose.Schema({
   teamName: String,
   Code: String,
   Students: [{ type: String }], // Array of student usernames
-  Owner: String // Owner's username of the quiz
+  Owner: String, // Owner's username of the quiz
+  quizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }] // Array of quiz IDs associated with the team
 });
 
 const quizSchema = new mongoose.Schema({
@@ -183,50 +184,6 @@ app.delete('/teams/:teamId', async (req, res) => {
   } catch (error) {
     console.error('Error deleting team:', error);
     res.status(500).json({ error: 'Server error' });
-  }
-});
-
-app.post("/joinTeam/:username", async (req, res) => {
-  const { teamName, code } = req.body;
-  // console.log("teamName: "+teamName+" code: "+code);
-  const { username } = req.params;
-  // console.log("username: "+username);
-
-  try {
-    // Check if team exists with given name and code
-    const team = await Team.findOne({ teamName: teamName, Code: code });
-    if (!team) {
-      return res.status(404).json({ message: "Team not found." });
-    }
-
-    // Check if the username already exists in the team
-    if (team.Students.includes(username)) {
-      return res.status(400).json({ message: "Already joined the team." });
-    }
-
-    // Logic to add the student's username to the team
-    team.Students.push(username);
-    await team.save();
-
-    res.status(200).json({ message: "Successfully joined the team." });
-
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ message: "Failed to join the team." });
-  }
-});
-
-app.get("/student/:username/quizzes", async (req, res) => {
-  const { username } = req.params;
-
-  try {
-    // Find teams where the student has been added
-    const teams = await Team.find({ Students: username });
-
-    res.status(200).json(teams);
-  } catch (error) {
-    console.error("Error fetching quizzes:", error);
-    res.status(500).json({ message: "Failed to fetch quizzes." });
   }
 });
 
