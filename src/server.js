@@ -252,7 +252,50 @@ app.delete('/teams/:teamId/quizzes/:quizId', async (req, res) => {
   }
 });
 
+app.post("/joinTeam/:username", async (req, res) => {
+  const { teamName, code } = req.body;
+  const { username } = req.params;
 
+  try {
+    // Check if team exists with given name and code
+    const team = await Team.findOne({ teamName: teamName,Code: code });
+
+    if (!team) {
+      return res.status(404).json({ message: "Team not found." });
+    }
+
+    // Check if the username already exists in the team
+    if (team.Students.includes(username)) {
+      return res.status(400).json({ message: "Already joined the team." });
+    }
+     
+    console.log("team: "+team);
+    // Logic to add the student's username to the team
+    team.Students.push(username);
+    await team.save();
+
+    res.status(200).json({ message: "Successfully joined the team." });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Failed to join the team." });
+  }
+});
+
+
+app.get("/student/:username/quizzes", async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const teams = await Team.find({ Students: username });
+
+    console.log("quizzes: "+teams);
+
+    res.status(200).json(teams);
+  } catch (error) {
+    console.error("Error fetching quizzes:", error);
+    res.status(500).json({ message: "Failed to fetch quizzes." });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

@@ -10,7 +10,7 @@ const PreviousQuizStudent = () => {
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/student/${username}/quizzes`);
-        console.log(response.data);
+        console.log("Response data:", response.data); // Log the response data
         setQuizzes(response.data);
       } catch (error) {
         console.error('Error fetching quizzes:', error);
@@ -27,11 +27,6 @@ const PreviousQuizStudent = () => {
         {quizzes.map((team) => (
           <li key={team._id}>
             <h3>{team.teamName}</h3>
-            <ul>
-              {team.quizzes && team.quizzes.map((quiz) => (
-                <li key={quiz._id}>{quiz.quizName}</li>
-              ))}
-            </ul>
           </li>
         ))}
       </ul>
