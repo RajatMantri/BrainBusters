@@ -10,6 +10,8 @@ import CreateTeam from "./createTeam";
 import AdminQuizList from './AdminQuizList';
 import ViewQuizAdmin from "./ViewQuizAdmin";
 import AdminTeamList from './AdminTeamList';
+import PreviousQuizStudent from "./PreviousQuizStudent";
+import JoinTeam from './JoinTeam';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
         <Route path="/adminHome/previousQuiz/:username" element={<AdminQuizList/>} />
         <Route path="/adminHome/previousTeam/:username" element={<AdminTeamList/>} />
         <Route path="/quiz/:quizId" element={<ViewQuizAdmin/>} />
+        <Route path="/studentHome/JoinTeam/:username" element={<JoinTeam />} />
+        <Route path="/studentHome/PreviousTeam/:username" element={<PreviousQuizStudent />} />
         <Route path="*" element={<div>Error</div>}/>
       </Routes>
     </div>

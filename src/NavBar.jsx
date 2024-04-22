@@ -32,6 +32,14 @@ const NavBar = (props) => {
                     )}
 
                     {props.type === 'student' && (
+                        <Link to={`/studentHome/PreviousTeam/${props.username}`} className="link-button"><button>Previous Teams</button></Link>
+                    )}
+                   
+                    {props.type === 'student' && (
+                        <Link to={`/studentHome/JoinTeam/${props.username}`} className="link-button"><button>New Team</button></Link>
+                    )}
+
+                    {props.type === 'student' && (
                         <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown} onTouchStart={toggleDropdown}>
                             <button className="dropbtn">{props.username}</button>
                             {isOpen && (
@@ -42,6 +50,7 @@ const NavBar = (props) => {
                             )}
                         </div>
                     )}
+
 
                     {props.type === 'admin' && (
                         <Link to={`/adminHome/previousQuiz/${props.username}`} className="link-button"><button>Previous Quiz</button></Link>
