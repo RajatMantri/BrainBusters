@@ -22,7 +22,8 @@ const teamSchema = new mongoose.Schema({
   teamName: String,
   Code: String,
   Students: [{ type: String }], // Array of student usernames
-  Owner: String // Owner's username of the quiz
+  Owner: String, // Owner's username of the quiz
+  quizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }] // Array of quiz IDs associated with the team
 });
 
 const quizSchema = new mongoose.Schema({
@@ -185,6 +186,73 @@ app.delete('/teams/:teamId', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+app.put('/:teamId/quizzes/:quizId', async (req, res) => {
+  const { teamId, quizId } = req.params;
+  try {
+    const team = await Team.findById(teamId);
+    if (!team) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+    // Check if the quiz is already added to the team
+    if (team.quizzes.includes(quizId)) {
+      return res.json({ message: 'Quiz already added to the team' });
+    }
+    // Add the quiz ID to the team's quizzes array
+    team.quizzes.push(quizId);
+    await team.save();
+
+    res.json({ message: 'Quiz added to team successfully' });
+  } catch (error) {
+    console.error('Error adding quiz to team:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/teams/:teamId/quizzes', async (req, res) => {
+  const { teamId } = req.params;
+  try {
+    const team = await Team.findById(teamId).populate('quizzes');
+    if (!team) {
+      return res.json({ message: 'Team not found' });
+    }
+    res.status(200).json(team.quizzes);
+  } catch (error) {
+    console.error('Error fetching quizzes for team:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.delete('/teams/:teamId/quizzes/:quizId', async (req, res) => {
+  const { teamId, quizId } = req.params;
+  try {
+    const team = await Team.findById(teamId);
+    if (!team) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+
+    // Check if the quiz is associated with the team
+    if (!team.quizzes.includes(quizId)) {
+      return res.status(404).json({ message: 'Quiz not found in the team' });
+    }
+
+    // Remove the quiz ID from the team's quizzes array
+    team.quizzes = team.quizzes.filter(q => q.toString() !== quizId);
+    await team.save();
+
+    res.status(200).json({ message: 'Quiz deleted from team successfully' });
+  } catch (error) {
+    console.error('Error deleting quiz from team:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

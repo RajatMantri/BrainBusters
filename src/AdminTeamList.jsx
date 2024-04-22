@@ -16,7 +16,7 @@ const TeamList = () => {
   const fetchTeams = async () => {
     try {
       const response = await axios.get(`http://localhost:4000/teams/${username}`);
-      console.log(response.data);
+      //console.log(response.data);
       setTeams(response.data);
     } catch (error) {
       console.error('Error fetching teams:', error);
@@ -43,9 +43,12 @@ const TeamList = () => {
             <strong>Team Code:</strong> {team.Code}<br /> 
              <strong>Owner:</strong> {team.Owner}<br />
              <strong>Students:</strong> {team.Students.join(', ')}<br />
-            <button style={{ backgroundColor: 'red' }} onClick={() => handleDeleteTeam(team._id)}>Delete</button>
+            <button style={{ backgroundColor: 'red' }} onClick={() => handleDeleteTeam(team._id)}>Delete Team</button>
             {/* Optionally, you can add a link to view team details */ }
-             <Link to={`/team/${team._id}`}><button>View Team</button></Link>
+             <Link to={`/team/${team._id}`}><button>View Quiz</button></Link>
+             <Link to={`/quizzes/${team._id}/${username}`}><button>Add Quiz</button></Link>
+             <Link to={`/quizzes/delete/${team._id}/${username}`}><button style={{ backgroundColor: 'red' }}>Delete Quiz</button></Link>
+             
           </li>
         ))}
       </ul>
