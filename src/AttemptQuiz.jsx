@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 const AttemptQuiz = () => {
   const { quizId } = useParams();
   const [quiz, setQuiz] = useState(null);
+  const [responses, setResponses] = useState({});
 
   useEffect(() => {
     fetchQuiz();
@@ -20,8 +21,28 @@ const AttemptQuiz = () => {
   };
 
   const handleAnswerSelection = (questionId, selectedOption) => {
-    // Implement logic to handle user's answer selection
-    console.log(`User selected ${selectedOption} for question ${questionId}`);
+    setQuiz(prevQuiz => {
+      const updatedQuestions = prevQuiz.questions.map(question => {
+        if (question._id === questionId) {
+          return { ...question, selectedAnswer: selectedOption };
+        }
+        return question;
+      });
+      return { ...prevQuiz, questions: updatedQuestions };
+    });
+    // console.log('Quiz submitted successfully!: '+);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Assuming you have a backend endpoint to handle quiz submissions
+      console.log('Quiz submitted successfully!: '+JSON.stringify(quiz));
+      await axios.post(`http://localhost:4000/SaveResponse`, JSON.stringify(quiz));
+      // Optionally, you can redirect the user or show a success message
+    } catch (error) {
+      console.error('Error submitting quiz:', error);
+      // Handle error, show an error message, etc.
+    }
   };
 
   if (!quiz) {
@@ -81,7 +102,7 @@ const AttemptQuiz = () => {
           </li>
         ))}
       </ol>
-      <button>Submit Quiz</button>
+      <button onClick={handleSubmit}>Submit Quiz</button>
     </div>
   );
 };

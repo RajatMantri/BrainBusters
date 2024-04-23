@@ -36,7 +36,7 @@ const NavBar = (props) => {
                     )}
                    
                     {props.type === 'student' && (
-                        <Link to={`/studentHome/JoinTeam/${props.username}`} className="link-button"><button>New Team</button></Link>
+                        <Link to={`/studentHome/JoinTeam/${props.username}`} className="link-button"><button>Join Team</button></Link>
                     )}
 
                     {props.type === 'student' && (

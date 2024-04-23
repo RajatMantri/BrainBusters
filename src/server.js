@@ -34,11 +34,26 @@ const quizSchema = new mongoose.Schema({
     title: String,
     type: { type: String, enum: ['multipleChoice', 'trueFalse', 'paragraph'] },
     options: { type: [String], default: [] },
-    correctAnswer: { type: mongoose.Schema.Types.Mixed, default: null }
+    correctAnswer: { type: mongoose.Schema.Types.Mixed, default: null },
+    selectedAnswer: { type: mongoose.Schema.Types.Mixed, default: null }
+  }]
+});
+
+const responseSchema = new mongoose.Schema({
+  username: String,
+  title: String,
+  questions: [{
+    id: Number,
+    title: String,
+    type: { type: String, enum: ['multipleChoice', 'trueFalse', 'paragraph'] },
+    options: { type: [String], default: [] },
+    correctAnswer: { type: mongoose.Schema.Types.Mixed, default: null },
+    selectedAnswer: { type: mongoose.Schema.Types.Mixed, default: null }
   }]
 });
 
 const Quiz = mongoose.model('Quiz', quizSchema);
+const Response = mongoose.model('Response', responseSchema);
 const Team = mongoose.model('Team', teamSchema);
 const FormDataModel = mongoose.model('FormData', formDataSchema);
 
@@ -288,14 +303,31 @@ app.get("/student/:username/quizzes", async (req, res) => {
   try {
     const teams = await Team.find({ Students: username });
 
-    console.log("quizzes: "+teams);
-
     res.status(200).json(teams);
   } catch (error) {
     console.error("Error fetching quizzes:", error);
     res.status(500).json({ message: "Failed to fetch quizzes." });
   }
 });
+
+app.post('/SaveResponse', async (req, res) => {
+  try {
+    let quizData = req.body;
+    console.log("hi");
+    if (typeof quizData === 'string') {
+      // Parse the JSON string into an object
+      quizData = JSON.parse(quizData);
+      console.log(quizData);
+    }
+    const quiz = new Response(quizData); // Creating a new instance of the Quiz model
+    const savedQuiz = await quiz.save(); // Saving the quiz to the database
+    res.status(201).json(savedQuiz);
+  } catch (error) {
+    console.error('Error submitting quiz:', error);
+    res.status(500).json({ error: 'Failed to submit quiz' });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
