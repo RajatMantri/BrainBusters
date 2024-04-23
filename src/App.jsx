@@ -13,8 +13,10 @@ import AdminTeamList from './AdminTeamList';
 import AddQuizToTeam from './AddQuizToTeam';
 import ViewTeamQuiz from "./ViewTeamQuiz"
 import DeleteQuiz from "./DeleteQuiz";
-import PreviousQuizStudent from './PreviousQuizStudent';
+import ShowTeam from './ShowQuizzes';
 import JoinTeam from './JoinTeam';
+import ViewStudentQuiz from "./ViewStudentQuiz";
+import AttemptQuiz from "./AttemptQuiz";
 
 function App() {
   return (
@@ -33,8 +35,11 @@ function App() {
         <Route path="/quizzes/:teamId/:username" element={<AddQuizToTeam/>} />
         <Route path="/quizzes/delete/:teamId/:username" element={<DeleteQuiz/>} />
         <Route path="/team/:teamId" element={<ViewTeamQuiz/>} />
-        <Route path="/studentHome/PreviousTeam/:username" element={<PreviousQuizStudent/>} />
+        <Route path="/team/:username/:teamId" element={<ViewStudentQuiz/>} />
+        <Route path="/studentHome/PreviousTeam/:username" element={<ShowTeam/>} />
         <Route path="/studentHome/JoinTeam/:username" element={<JoinTeam/>} />
+        <Route path="/quiz/:quizId/:username/attempt" element={<AttemptQuiz/>} />
+
         <Route path="*" element={<div>Error</div>}/>
       </Routes>
     </div>

@@ -1,32 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 const PreviousQuizStudent = () => {
   const { username } = useParams();
-  const [quizzes, setQuizzes] = useState([]);
+  const [teams, setTeams] = useState([]);
 
   useEffect(() => {
-    const fetchQuizzes = async () => {
+    const fetchTeams = async () => {
       try {
         const response = await axios.get(`http://localhost:4000/student/${username}/quizzes`);
         console.log("Response data:", response.data); // Log the response data
-        setQuizzes(response.data);
+        setTeams(response.data);
       } catch (error) {
-        console.error('Error fetching quizzes:', error);
+        console.error('Error fetching teams:', error);
       }
     };
 
-    fetchQuizzes();
-  }, [username]); // Dependency array added to re-fetch quizzes when username changes
+    fetchTeams();
+  }, [username]); // Dependency array added to re-fetch teams when username changes
 
   return (
     <div>
-      <h2>Quizzes associated with {username}</h2>
+      <h2>Teams associated with {username}</h2>
       <ul>
-        {quizzes.map((team) => (
+        {teams.map((team) => (
           <li key={team._id}>
             <h3>{team.teamName}</h3>
+            <Link to={`/team/${username}/${team._id}`}>
+              <button>View Quiz</button>
+            </Link>
           </li>
         ))}
       </ul>

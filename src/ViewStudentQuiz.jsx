@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 
 const ViewQuiz = () => {
-  const { teamId } = useParams();
+  const { username,teamId } = useParams();
   const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
@@ -26,9 +26,9 @@ const ViewQuiz = () => {
       <ul>
         {quizzes.map((quiz) => (
           <li key={quiz._id}>
-            <Link to={`/quiz/${quiz._id}`}>
               <strong>Title:</strong> {quiz.title}
-            </Link>
+            {/* Add a button to attempt the quiz */}
+            <Link to={`/quiz/${quiz._id}/${username}/attempt`}><button>Attempt Quiz</button></Link>
           </li>
         ))}
       </ul>
