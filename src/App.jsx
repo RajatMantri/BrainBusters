@@ -17,6 +17,8 @@ import ShowTeam from './ShowQuizzes';
 import JoinTeam from './JoinTeam';
 import ViewStudentQuiz from "./ViewStudentQuiz";
 import AttemptQuiz from "./AttemptQuiz";
+import Result from './AttemptedQuizes';
+import ViewResult from './ViewResult';
 
 function App() {
   return (
@@ -39,7 +41,9 @@ function App() {
         <Route path="/studentHome/PreviousTeam/:username" element={<ShowTeam/>} />
         <Route path="/studentHome/JoinTeam/:username" element={<JoinTeam/>} />
         <Route path="/quiz/:quizId/:username/attempt" element={<AttemptQuiz/>} />
-
+        <Route path="/studentHome/Results/:username" element={<Result/>} />
+        <Route path="/quiz/:quizId/:username/result" element={<ViewResult/>} />
+ 
         <Route path="*" element={<div>Error</div>}/>
       </Routes>
     </div>

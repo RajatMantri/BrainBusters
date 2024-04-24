@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const AttemptQuiz = () => {
-  const { quizId } = useParams();
+  const { quizId, username } = useParams();
+  // const {student} = useParams().student;
   const [quiz, setQuiz] = useState(null);
   const [responses, setResponses] = useState({});
 
@@ -36,8 +38,8 @@ const AttemptQuiz = () => {
   const handleSubmit = async () => {
     try {
       // Assuming you have a backend endpoint to handle quiz submissions
-      console.log('Quiz submitted successfully!: '+JSON.stringify(quiz));
-      await axios.post(`http://localhost:4000/SaveResponse`, JSON.stringify(quiz));
+      // console.log('Quiz submitted successfully!: '+JSON.stringify(quiz));
+      await axios.post(`http://localhost:4000/SaveResponse/${quizId}/${username}`, (quiz));
       // Optionally, you can redirect the user or show a success message
     } catch (error) {
       console.error('Error submitting quiz:', error);
@@ -102,7 +104,7 @@ const AttemptQuiz = () => {
           </li>
         ))}
       </ol>
-      <button onClick={handleSubmit}>Submit Quiz</button>
+      <Link to={`/studentHome/${username}`}><button onClick={handleSubmit}>Submit Quiz</button></Link>
     </div>
   );
 };

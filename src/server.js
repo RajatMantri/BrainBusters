@@ -40,6 +40,10 @@ const quizSchema = new mongoose.Schema({
 });
 
 const responseSchema = new mongoose.Schema({
+  // Explicitly specifying that _id should be generated automatically
+  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+  owner: String,
+  quizId: String,
   username: String,
   title: String,
   questions: [{
@@ -51,6 +55,7 @@ const responseSchema = new mongoose.Schema({
     selectedAnswer: { type: mongoose.Schema.Types.Mixed, default: null }
   }]
 });
+
 
 const Quiz = mongoose.model('Quiz', quizSchema);
 const Response = mongoose.model('Response', responseSchema);
@@ -310,17 +315,23 @@ app.get("/student/:username/quizzes", async (req, res) => {
   }
 });
 
-app.post('/SaveResponse', async (req, res) => {
+app.post('/SaveResponse/:quizId/:username', async (req, res) => {
   try {
+    const { quizId, username } = req.params;
+
     let quizData = req.body;
-    console.log("hi");
-    if (typeof quizData === 'string') {
-      // Parse the JSON string into an object
-      quizData = JSON.parse(quizData);
-      console.log(quizData);
-    }
-    const quiz = new Response(quizData); // Creating a new instance of the Quiz model
+    delete quizData._id;
+
+    const quiz = new Response({
+      quizId: quizId,
+      username: username,
+      owner: quizData.username,
+      title: quizData.title,
+      questions: quizData.questions
+    }); // Creating a new instance of the Response model
+
     const savedQuiz = await quiz.save(); // Saving the quiz to the database
+
     res.status(201).json(savedQuiz);
   } catch (error) {
     console.error('Error submitting quiz:', error);
@@ -328,6 +339,39 @@ app.post('/SaveResponse', async (req, res) => {
   }
 });
 
+app.get('/getAttemptedQuizzes/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    // Find attempted quizzes for the specified username
+    const attemptedQuizzes = await Response.find({ username });
+
+    // Send the attempted quizzes data as a response
+    res.status(200).json(attemptedQuizzes);
+  } catch (error) {
+    console.error('Error fetching attempted quizzes:', error);
+    res.status(500).json({ error: 'Failed to fetch attempted quizzes' });
+  }
+});
+
+app.get('/getResponse/:quizId/:username', async (req, res) => {
+  try {
+    const { quizId, username } = req.params;
+
+    // Find the response for the specified quizId and username
+    const response = await Response.findOne({ quizId, username });
+
+    // If response is found, send it as a JSON response
+    if (response) {
+      res.status(200).json(response);
+    } else {
+      res.status(404).json({ message: 'Response not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching response:', error);
+    res.status(500).json({ error: 'Failed to fetch response' });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
