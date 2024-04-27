@@ -110,19 +110,13 @@ const handleOptionChange = (questionIndex, optionIndex, e) => {
 
   return (
     <div className="quiz-container">
-      <h2 className={`quiz-title ${isEditingTitle ? 'editing' : ''}`} onClick={handleTitleClick}>
-        {isEditingTitle ? (
-          <input
-            type="text"
-            value={quizTitle}
-            onChange={handleQuizTitleChange}
-            onBlur={handleTitleBlur}
-            autoFocus
-          />
-        ) : (
-          quizTitle
-        )}
-      </h2>
+      <input className={`quiz-title ${isEditingTitle ? 'editing' : ''}`} onClick={handleTitleClick} 
+      type = "text"
+      value = {quizTitle} 
+      onChange={handleQuizTitleChange} 
+      onBlur={handleTitleBlur} 
+      autoFocus
+      />
 
       {questions.map((question, index) => (
         <div key={question.id} className="question-container">
