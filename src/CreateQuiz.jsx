@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import './createQuiz.css';
 
 const Quiz = () => {
-  const [quizTitle, setQuizTitle] = useState("My Quiz");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [quizTitle, setQuizTitle] = useState("My Quiz");
   const username = useParams();
   const [questions, setQuestions] = useState([
     {
@@ -18,15 +18,15 @@ const Quiz = () => {
     }
   ]);
 
-  const handleQuizTitleChange = (e) => {
-    setQuizTitle(e.target.value);
-  };
-
-  const handleTitleClick = () => {
+  const handleTitleClick = () => {//when the title is clicked
     setIsEditingTitle(true);
   };
 
-  const handleTitleBlur = () => {
+  const handleQuizTitleChange = (e) => {//when the title is being changed
+    setQuizTitle(e.target.value);
+  };
+
+  const handleTitleBlur = () => {//when the title loses focus
     setIsEditingTitle(false);
   };
 
