@@ -45,6 +45,7 @@ const responseSchema = new mongoose.Schema({
   owner: String,
   quizId: String,
   username: String,
+  attempt: Number,
   title: String,
   questions: [{
     id: Number,
@@ -320,19 +321,37 @@ app.post('/SaveResponse/:quizId/:username', async (req, res) => {
     const { quizId, username } = req.params;
 
     let quizData = req.body;
-    delete quizData._id;
-
-    const quiz = new Response({
-      quizId: quizId,
-      username: username,
-      owner: quizData.username,
-      title: quizData.title,
-      questions: quizData.questions
-    }); // Creating a new instance of the Response model
-
-    const savedQuiz = await quiz.save(); // Saving the quiz to the database
-
-    res.status(201).json(savedQuiz);
+   // Check if there is an existing response for this quizId and username
+   let existingResponse = await Response.findOne({ quizId, username })
+   .sort({ attempt: -1 });
+   
+   // If there is an existing response, increment the attempt count
+   if (existingResponse) {
+     existingResponse.attempt += 1; // Increment attempt count
+     const newResponse = new Response({
+       quizId,
+       username,
+       owner: quizData.username,
+       title: quizData.title,
+       attempt: existingResponse.attempt,
+       questions: quizData.questions,
+       attempt: existingResponse.attempt, // Set attempt to 0 for new attempts
+     });
+     const savedResponse = await newResponse.save();
+     res.status(200).json(savedResponse);
+   } else {
+     // If no existing response found, create a new response with attempt set to 0
+     const newResponse = new Response({
+       quizId,
+       username,
+       owner: quizData.username,
+       title: quizData.title,
+       questions: quizData.questions,
+       attempt: 0, // Set attempt to 0 for new attempts
+     });
+     const savedResponse = await newResponse.save(); // Save the new response
+     res.status(201).json(savedResponse);
+   }
   } catch (error) {
     console.error('Error submitting quiz:', error);
     res.status(500).json({ error: 'Failed to submit quiz' });
@@ -343,9 +362,24 @@ app.get('/getAttemptedQuizzes/:username', async (req, res) => {
   try {
     const { username } = req.params;
 
-    // Find attempted quizzes for the specified username
-    const attemptedQuizzes = await Response.find({ username });
+       // Find attempted quizzes for the specified username where Attempt === 0
+       const attemptedQuizzes = await Response.find({ username, attempt: 0 });
 
+    // Send the attempted quizzes data as a response
+    res.status(200).json(attemptedQuizzes);
+  } catch (error) {
+    console.error('Error fetching attempted quizzes:', error);
+    res.status(500).json({ error: 'Failed to fetch attempted quizzes' });
+  }
+});
+
+app.get('/getAttemptedQuizzes/view/:username', async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    // Find attempted quizzes for the specified username where Attempt === 0
+    const attemptedQuizzes = await Response.find({ username});
+    console.log(attemptedQuizzes);
     // Send the attempted quizzes data as a response
     res.status(200).json(attemptedQuizzes);
   } catch (error) {
@@ -359,14 +393,39 @@ app.get('/getResponse/:quizId/:username', async (req, res) => {
     const { quizId, username } = req.params;
 
     // Find the response for the specified quizId and username
-    const response = await Response.findOne({ quizId, username });
+    const response = await Response.findOne({ quizId, username })
+    .sort({ attempt: -1 }) // Sort by attempt in descending order
 
     // If response is found, send it as a JSON response
-    if (response) {
-      res.status(200).json(response);
-    } else {
-      res.status(404).json({ message: 'Response not found' });
+    if (!response) {
+      return res.status(404).json({ error: 'Response not found' });
     }
+  //  console.log(response);
+    // Send the response data as a response
+    res.status(200).json(response);
+
+  } catch (error) {
+    console.error('Error fetching response:', error);
+    res.status(500).json({ error: 'Failed to fetch response' });
+  }
+});
+
+
+app.get('/getResponse/:quizId/:username/:attempt', async (req, res) => {
+  try {
+    const { quizId, username, attempt } = req.params;
+
+    // Find the response for the specified quizId and username
+    const response = await Response.findOne({ quizId, username, attempt });
+
+    // If response is found, send it as a JSON response
+    if (!response) {
+      return res.status(404).json({ error: 'Response not found' });
+    }
+
+    // Send the response data as a response
+    res.status(200).json(response);
+
   } catch (error) {
     console.error('Error fetching response:', error);
     res.status(500).json({ error: 'Failed to fetch response' });
