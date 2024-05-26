@@ -7,7 +7,6 @@ const AttemptQuiz = () => {
   const { quizId, username } = useParams();
   // const {student} = useParams().student;
   const [quiz, setQuiz] = useState(null);
-  const [responses, setResponses] = useState({});
 
   useEffect(() => {
     fetchQuiz();

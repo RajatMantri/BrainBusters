@@ -54,7 +54,8 @@ const responseSchema = new mongoose.Schema({
     options: { type: [String], default: [] },
     correctAnswer: { type: mongoose.Schema.Types.Mixed, default: null },
     selectedAnswer: { type: mongoose.Schema.Types.Mixed, default: null }
-  }]
+  }],
+  score: { type: Number, default: 0 }
 });
 
 
@@ -319,39 +320,52 @@ app.get("/student/:username/quizzes", async (req, res) => {
 app.post('/SaveResponse/:quizId/:username', async (req, res) => {
   try {
     const { quizId, username } = req.params;
+    const quizData = req.body;
 
-    let quizData = req.body;
-   // Check if there is an existing response for this quizId and username
-   let existingResponse = await Response.findOne({ quizId, username })
-   .sort({ attempt: -1 });
-   
-   // If there is an existing response, increment the attempt count
-   if (existingResponse) {
-     existingResponse.attempt += 1; // Increment attempt count
-     const newResponse = new Response({
-       quizId,
-       username,
-       owner: quizData.username,
-       title: quizData.title,
-       attempt: existingResponse.attempt,
-       questions: quizData.questions,
-       attempt: existingResponse.attempt, // Set attempt to 0 for new attempts
-     });
-     const savedResponse = await newResponse.save();
-     res.status(200).json(savedResponse);
-   } else {
-     // If no existing response found, create a new response with attempt set to 0
-     const newResponse = new Response({
-       quizId,
-       username,
-       owner: quizData.username,
-       title: quizData.title,
-       questions: quizData.questions,
-       attempt: 0, // Set attempt to 0 for new attempts
-     });
-     const savedResponse = await newResponse.save(); // Save the new response
-     res.status(201).json(savedResponse);
-   }
+    // Function to calculate score
+    const calculateScore = (questions) => {
+      return questions.reduce((score, question) => {
+        if (question.selectedAnswer == question.correctAnswer) {
+          return score + 1;
+        }
+        return score;
+      }, 0);
+    };
+
+    // Calculate the score for the response
+    const score = calculateScore(quizData.questions);
+
+    // Check if there is an existing response for this quizId and username
+    let existingResponse = await Response.findOne({ quizId, username }).sort({ attempt: -1 });
+
+    // If there is an existing response, increment the attempt count
+    if (existingResponse) {
+      existingResponse.attempt += 1;
+      const newResponse = new Response({
+        quizId,
+        username,
+        owner: quizData.username,
+        title: quizData.title,
+        attempt: existingResponse.attempt,
+        questions: quizData.questions,
+        score: score // Store the calculated score
+      });
+      const savedResponse = await newResponse.save();
+      res.status(200).json(savedResponse);
+    } else {
+      // If no existing response found, create a new response with attempt set to 0
+      const newResponse = new Response({
+        quizId,
+        username,
+        owner: quizData.username,
+        title: quizData.title,
+        questions: quizData.questions,
+        attempt: 0,
+        score: score // Store the calculated score
+      });
+      const savedResponse = await newResponse.save(); // Save the new response
+      res.status(201).json(savedResponse);
+    }
   } catch (error) {
     console.error('Error submitting quiz:', error);
     res.status(500).json({ error: 'Failed to submit quiz' });
@@ -429,6 +443,28 @@ app.get('/getResponse/:quizId/:username/:attempt', async (req, res) => {
   } catch (error) {
     console.error('Error fetching response:', error);
     res.status(500).json({ error: 'Failed to fetch response' });
+  }
+});
+
+app.get('/leaderboard/:quizId', async (req, res) => {
+  try {
+    const {quizId}  = req.params;
+    
+    // Find responses with attempt == 0 for the specified quizId
+    const responses = await Response.find({ quizId, attempt: 0 }).sort({ score: -1 });
+    // console.log(responses);
+    // console.log(quizId);
+
+    if (!responses || responses.length === 0) {
+      return res.status(404).json({ error: 'No responses found' });
+    }
+    
+    // Send the responses data as a response
+    res.status(200).json(responses);
+
+  } catch (error) {
+    console.error('Error fetching leaderboard data:', error);
+    res.status(500).json({ error: 'Failed to fetch leaderboard data' });
   }
 });
 

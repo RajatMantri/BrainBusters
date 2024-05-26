@@ -36,6 +36,9 @@ const Result = () => {
               <Link to={`/quiz/${quiz.quizId}/${username}/result`}>
                 <button>View Result</button>
               </Link>
+              <Link to={`/quiz/leaderboard/${quiz.quizId}`}>
+                <button>Leaderboard</button>
+              </Link>
             </li>
           ))}
         </ul>
